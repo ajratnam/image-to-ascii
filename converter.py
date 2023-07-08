@@ -14,3 +14,14 @@ def get_size_of_char(char):
 
 
 sorted_letters = sorted(CONVERSION_CHARACTERS, key=get_size_of_char)
+
+image = Image.open('image.jpg')
+width, height = image.size
+scaled_image = image.resize((width * 2, height)).convert('L')
+
+image_array = np.array(scaled_image, dtype=int) * len(sorted_letters) // 256
+ascii_converted = np.vectorize(sorted_letters.__getitem__)(image_array)
+
+with open('ascii.txt', 'w') as f:
+    for row in ascii_converted:
+        f.write(''.join(row) + '\n')
