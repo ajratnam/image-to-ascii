@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "image-to-ascii"
+version = "0.1.0"
+description = ""
+authors = ["Ajay Ratnam <ajratnam.dev@gmail.com>"]
+readme = "README.md"
+packages = [{include = "image_to_ascii"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pillow = "^10.0.0"
+numpy = "^1.25.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
