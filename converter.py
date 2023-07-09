@@ -26,15 +26,23 @@ def get_size_of_char(char):
 
 sorted_letters = sorted(CONVERSION_CHARACTERS, key=get_size_of_char)
 
+
+def image_to_ascii(image, size=None, charset=None, fix_scaling=True, sort_chars=False):
+    if sort_chars and charset:
+        charset = sorted(charset, key=get_size_of_char)
+    charset = charset or sorted_letters
+    image_width, image_height = size or image.size
+    image_width *= bool(fix_scaling) + 1
+    scaled_image = image.resize((image_width, image_height)).convert('L')
+
+    image_array = np.array(scaled_image, dtype=int) * len(charset) // 256
+    ascii_converted = np.vectorize(charset.__getitem__)(image_array)
+
+    output = '\n'.join(map(''.join, ascii_converted))
+    ascii_to_image(output).save('text5.png')
+    return output
+
+
 image = Image.open('image.jpg')
-image_width, image_height = image.size
-scaled_image = image.resize((image_width * 2, image_height)).convert('L')
-
-image_array = np.array(scaled_image, dtype=int) * len(sorted_letters) // 256
-ascii_converted = np.vectorize(sorted_letters.__getitem__)(image_array)
-
-output = ""
-for row in ascii_converted:
-    output += ''.join(row) + '\n'
-
-ascii_to_image(output).save('text.png')
+with open('converted.txt', 'w+') as file:
+    file.write(image_to_ascii(image))
