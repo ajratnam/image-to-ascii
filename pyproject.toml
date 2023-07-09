@@ -10,6 +10,7 @@ packages = [{include = "image_to_ascii"}]
 python = "^3.10"
 pillow = "^10.0.0"
 numpy = "^1.25.0"
+requests = "^2.31.0"
 
 
 [build-system]
