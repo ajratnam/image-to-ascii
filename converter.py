@@ -162,9 +162,9 @@ def image_to_ascii(
     output = "\n".join(map("".join, ascii_converted))
     if colorfull:
         colors = []
-        for row in np.array(sharpened_image):
+        for row in np.array(sharpened_image.convert("RGB")):
             for pixel in row:
-                colors.append(bg(*pixel[:-1]))
+                colors.append(bg(*pixel))
             colors.append(rs.bg)
         output = "".join(color + char for color, char in zip(colors, output))
     return output
