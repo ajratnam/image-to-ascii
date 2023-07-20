@@ -3,7 +3,8 @@ from collections.abc import Sequence
 from typing import Optional
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont, ImageGrab, ImageFilter, ImageEnhance
+from sty import bg, rs
+from PIL import Image, ImageDraw, ImageFont, ImageGrab, ImageEnhance
 from requests import get
 
 from config import CONVERSION_CHARACTERS
@@ -86,6 +87,7 @@ def image_to_ascii(
     sharpness: float = 1,
     brightness: float = 1,
     sort_chars: bool = False,
+    colorfull: bool = False,
 ) -> str:
     """
     Convert image to ASCII art.
@@ -109,6 +111,8 @@ def image_to_ascii(
         Increases the brightness of the image by the given factor
     sort_chars : bool, optional, default False
         If given an unordered charset, it will sort it by the brightness of the characters.
+    colorfull : bool, optional, default False
+        Whether to use colored characters (only works on terminal).
 
     Returns
     -------
@@ -156,4 +160,11 @@ def image_to_ascii(
     ascii_converted = np.vectorize(charset.__getitem__)(image_array)
 
     output = "\n".join(map("".join, ascii_converted))
+    if colorfull:
+        colors = []
+        for row in np.array(sharpened_image):
+            for pixel in row:
+                colors.append(bg(*pixel[:-1]))
+            colors.append(rs.bg)
+        output = "".join(color + char for color, char in zip(colors, output))
     return output

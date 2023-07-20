@@ -440,6 +440,17 @@ files = [
 ]
 
 [[package]]
+name = "sty"
+version = "1.0.4"
+description = "String styling for your terminal"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "sty-1.0.4-py3-none-any.whl", hash = "sha256:3e3352f05770a37e11c9dfc303cbccb1c6acc13710e15d181cb43be7df89f8ea"},
+]
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -523,4 +534,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "bacc5942fe94d10ffd534931704fe3593d29ab559654d2e29d6ac819edb4e75e"
+content-hash = "2fa9bdeb8e702b763d0f6306a68a6dad3ca252bcd055b4d311aad702b02375d6"
