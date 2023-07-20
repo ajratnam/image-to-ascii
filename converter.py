@@ -3,7 +3,7 @@ from collections.abc import Sequence
 from typing import Optional
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont, ImageEnhance
+from PIL import Image, ImageDraw, ImageFont, ImageGrab
 from requests import get
 
 from config import CONVERSION_CHARACTERS
@@ -92,6 +92,7 @@ def image_to_ascii(
     ----------
     image : Image.Image or str
         The image to convert to ASCII art, can be given as path or URL or an Image object.
+        If given the string "clip" or "clipboard", it will use the image from the clipboard.
     size : tuple[int, int], optional
         The final size of the ascii art, if scale is given the scale will be applied upon this size.
     charset : Sequence[str], optional
@@ -114,15 +115,20 @@ def image_to_ascii(
         If image is invalid or cannot be loaded from path or URL.
     """
     if isinstance(image, str):
-        try:
-            image = Image.open(image)
-        except OSError:
+        if image.lower() in ("clip", "clipboard"):
+            image = ImageGrab.grabclipboard()
+            if not isinstance(image, Image.Image):
+                raise ValueError("Unable to load image from clipboard")
+        else:
             try:
-                image = Image.open(get(image, stream=True).raw)
+                image = Image.open(image)
+            except OSError:
+                try:
+                    image = Image.open(get(image, stream=True).raw)
+                except Exception:
+                    raise ValueError("Unable to load image from URL")
             except Exception:
-                raise ValueError("Unable to load image from URL")
-        except Exception:
-            raise ValueError("Unable to load image from path")
+                raise ValueError("Unable to load image from path")
     if not isinstance(image, Image.Image):
         raise ValueError("Invalid image path or URL")
 
