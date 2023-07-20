@@ -3,7 +3,7 @@ from collections.abc import Sequence
 from typing import Optional
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont, ImageGrab
+from PIL import Image, ImageDraw, ImageFont, ImageGrab, ImageFilter, ImageEnhance
 from requests import get
 
 from config import CONVERSION_CHARACTERS
@@ -83,6 +83,8 @@ def image_to_ascii(
     charset: Optional[Sequence[str]] = None,
     fix_scaling: bool = True,
     scale: float | tuple[float, float] = 1,
+    sharpness: float = 1,
+    brightness: float = 1,
     sort_chars: bool = False,
 ) -> str:
     """
@@ -101,6 +103,10 @@ def image_to_ascii(
         Whether to fix scaling of the image to preserve aspect ratio.
     scale : float or tuple[float, float], optional, default 1
         Scaling factor of the output image, if tuple is given it will be (width_scale, height_scale).
+    sharpness : float, optional, default 1
+        Increases the sharpness of the image by the given factor
+    brightness : float, optional, default 1
+        Increases the brightness of the image by the given factor
     sort_chars : bool, optional, default False
         If given an unordered charset, it will sort it by the brightness of the characters.
 
@@ -143,8 +149,10 @@ def image_to_ascii(
     image_width = int(image_width * scale[0] * (bool(fix_scaling) + 1))
     image_height = int(image_height * scale[1])
 
-    scaled_image = image.resize((image_width, image_height)).convert("L")
-    image_array = np.array(scaled_image, dtype=int) * len(charset) // 256
+    scaled_image = image.resize((image_width, image_height))
+    brightened_image = ImageEnhance.Brightness(scaled_image).enhance(brightness)
+    sharpened_image = ImageEnhance.Sharpness(brightened_image).enhance(sharpness)
+    image_array = np.array(sharpened_image.convert("L"), dtype=int) * len(charset) // 256
     ascii_converted = np.vectorize(charset.__getitem__)(image_array)
 
     output = "\n".join(map("".join, ascii_converted))
