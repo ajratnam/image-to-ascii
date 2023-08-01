@@ -22,6 +22,16 @@ def sizeof(text: str, font: ImageFont.FreeTypeFont = base_font) -> tuple[int, in
 
     Returns:
         size: The size of the text in pixels, (width, height).
+
+    Examples:
+        Using the default font:
+        >>> sizeof("Hello World")
+        (133, 20)
+
+        Using a custom font:
+        >>> custom_font = ImageFont.truetype("arial.ttf", 30)
+        >>> sizeof("Hello World", custom_font)
+        (155, 28)
     """
     draw = ImageDraw.Draw(Image.new("RGB", (1, 1)))
     _, _, width, height = draw.textbbox((0, 0), text, font)
@@ -38,6 +48,20 @@ def ascii_to_image(text: str, font: ImageFont.FreeTypeFont = base_font) -> Image
 
     Returns:
         text_image: The image of the rendered text.
+
+    Examples:
+        Using the default font:
+        >>> ascii_to_image("Hello World")
+        <PIL.Image.Image image mode=RGB size=133x20 at 0x1A9E4D77C40>
+
+        Using a custom font:
+        >>> custom_font = ImageFont.truetype("arial.ttf", 30)
+        >>> ascii_to_image("Hello World", custom_font)
+        <PIL.Image.Image image mode=RGB size=155x28 at 0x22E826A7C40>
+
+        Saving the image:
+        >>> image = ascii_to_image("Hello World")
+        >>> image.save("hello_world.png")
     """
     text_image = Image.new("RGB", sizeof(text, font))
     draw = ImageDraw.Draw(text_image)
@@ -55,6 +79,20 @@ def get_brightness_of_char(char: str, font: ImageFont.FreeTypeFont = base_font) 
 
     Returns:
         brightness: The brightness of the character, the number of pixels that are not black.
+
+    Examples:
+        Using the default font:
+        >>> get_brightness_of_char("A")
+        267
+
+        Using a custom font:
+        >>> custom_font = ImageFont.truetype("arial.ttf", 30)
+        >>> get_brightness_of_char("A", custom_font)
+        576
+
+        Comparing brightness of characters:
+        >>> get_brightness_of_char("@") > get_brightness_of_char(".")
+        True
     """
     image = ascii_to_image(char, font)
     return (np.array(image) != 0).sum()
@@ -94,6 +132,53 @@ def image_to_ascii(
 
     Raises:
         ValueError: If image is invalid or cannot be loaded from path or URL.
+
+    Examples:
+        Using a custom size and charset:
+        >>> print(image_to_ascii("github.png", size=(20, 20), charset="░▒▓█"))
+        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+        ░░░░░░░░░░░░░░▒▓▓▓████▓▓▓▒░░░░░░░░░░░░░░
+        ░░░░░░░░░░░▒▓██████████████▓▒░░░░░░░░░░░
+        ░░░░░░░░░▒████████████████████▒░░░░░░░░░
+        ░░░░░░░░▓███▓░▒▒▓▓▓▓▓▓▓▓▒▒░▓███▓░░░░░░░░
+        ░░░░░░░▓████▓░░░░░░░░░░░░░░▓████▓░░░░░░░
+        ░░░░░░▒█████░░░░░░░░░░░░░░░░▓████▒░░░░░░
+        ░░░░░░▓████▒░░░░░░░░░░░░░░░░▒████▓░░░░░░
+        ░░░░░░▓████▓░░░░░░░░░░░░░░░░▒████▓░░░░░░
+        ░░░░░░▒█████▒░░░░░░░░░░░░░░▒█████▒░░░░░░
+        ░░░░░░░▓█████▓▒▒░░░░░░░░▒▒▓█████▓░░░░░░░
+        ░░░░░░░░▓██▒▒████░░░░░░████████▓░░░░░░░░
+        ░░░░░░░░░▒██▓▒▒▒░░░░░░░▓██████▒░░░░░░░░░
+        ░░░░░░░░░░░▒▓███▓░░░░░░▓███▓▒░░░░░░░░░░░
+        ░░░░░░░░░░░░░░▒▓▒░░░░░░▒▓▒░░░░░░░░░░░░░░
+        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+        Tweaking brightness and sharpness:
+        >>> print(image_to_ascii("github.png", size=(20, 20), charset="░▒▓█", brightness=0.5, sharpness=0.5))
+        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+        ░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░
+        ░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░
+        ░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░
+        ░░░░░░░░▒▒▒▒▒░░░▒▒▒▒▒▒▒▒░░░▒▒▒▒▒░░░░░░░░
+        ░░░░░░░▒▒▒▒▒▒░░░░░░░░░░░░░░░▒▒▒▒▒░░░░░░░
+        ░░░░░░░▒▒▒▒▒░░░░░░░░░░░░░░░░▒▒▒▒▒░░░░░░░
+        ░░░░░░▒▒▒▒▒░░░░░░░░░░░░░░░░░░▒▒▒▒▒░░░░░░
+        ░░░░░░▒▒▒▒▒▒░░░░░░░░░░░░░░░░▒▒▒▒▒▒░░░░░░
+        ░░░░░░░▒▒▒▒▒░░░░░░░░░░░░░░░░▒▒▒▒▒░░░░░░░
+        ░░░░░░░▒▒▒▒▒▒▒░░░░░░░░░░░░▒▒▒▒▒▒▒░░░░░░░
+        ░░░░░░░░▒▒▒▒░▒▒▒▒░░░░░░▒▒▒▒▒▒▒▒▒░░░░░░░░
+        ░░░░░░░░░░▒▒▒░░░░░░░░░░▒▒▒▒▒▒▒░░░░░░░░░░
+        ░░░░░░░░░░░░▒▒▒▒▒░░░░░░▒▒▒▒▒░░░░░░░░░░░░
+        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
     """
     if isinstance(image, str):
         if image.lower() in ("clip", "clipboard"):
@@ -112,6 +197,8 @@ def image_to_ascii(
                 raise ValueError("Unable to load image from path")
     if not isinstance(image, Image.Image):
         raise ValueError("Invalid image path or URL")
+
+    image = image.convert("RGB")
 
     if sort_chars and charset:
         charset = sorted(charset, key=get_brightness_of_char)
