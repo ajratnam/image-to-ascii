@@ -16,17 +16,12 @@ def sizeof(text: str, font: ImageFont.FreeTypeFont = base_font) -> tuple[int, in
     """
     Get the size of the text when rendered in the given font in pixels.
 
-    Parameters
-    ----------
-    text: str
-        The input text to render.
-    font: ImageFont.FreeTypeFont, optional, default: base_font
-        The font to use for the text size calculation (default: monos.ttf).
+    Args:
+        text: The input text to render.
+        font: The font to use for the text size calculation (default: monos.ttf).
 
-    Returns
-    -------
-    size: tuple[int, int]
-        The size of the text in pixels, (width, height).
+    Returns:
+        size: The size of the text in pixels, (width, height).
     """
     draw = ImageDraw.Draw(Image.new("RGB", (1, 1)))
     _, _, width, height = draw.textbbox((0, 0), text, font)
@@ -37,17 +32,12 @@ def ascii_to_image(text: str, font: ImageFont.FreeTypeFont = base_font) -> Image
     """
     Convert the given text to an image using the given font.
 
-    Parameters
-    ----------
-    text: str
-        The input text to render.
-    font: ImageFont.FreeTypeFont, optional, default: base_font
-        The font to render the text in (default: monos.ttf).
+    Args:
+        text: The input text to render.
+        font: The font to render the text in (default: monos.ttf).
 
-    Returns
-    -------
-    text_image: Image.Image
-        The image of the rendered text.
+    Returns:
+        text_image: The image of the rendered text.
     """
     text_image = Image.new("RGB", sizeof(text))
     draw = ImageDraw.Draw(text_image)
@@ -59,17 +49,12 @@ def get_brightness_of_char(char: str, font: ImageFont.FreeTypeFont = base_font) 
     """
     Get the brightness of the given character when rendered in the given font.
 
-    Parameters
-    ----------
-    char: str
-        The character to find its brightness.
-    font: ImageFont.FreeTypeFont, optional, default: base_font
-        The font to use to render the character (default: monos.ttf).
+    Args:
+        char: The character to find its brightness.
+        font: The font to use to render the character (default: monos.ttf).
 
-    Returns
-    -------
-    brightness: int
-        The brightness of the character, the number of pixels that are not black.
+    Returns:
+        brightness: The brightness of the character, the number of pixels that are not black.
     """
     image = ascii_to_image(char, font)
     return (np.array(image) != 0).sum()
@@ -92,37 +77,23 @@ def image_to_ascii(
     """
     Convert image to ASCII art.
 
-    Parameters
-    ----------
-    image : Image.Image or str
-        The image to convert to ASCII art, can be given as path or URL or an Image object.
-        If given the string "clip" or "clipboard", it will use the image from the clipboard.
-    size : tuple[int, int], optional
-        The final size of the ascii art, if scale is given the scale will be applied upon this size.
-    charset : Sequence[str], optional
-        Characters to use for conversion ordered in lightest to darkest, if not given will use default characters.
-    fix_scaling : bool, optional, default True
-        Whether to fix scaling of the image to preserve aspect ratio.
-    scale : float or tuple[float, float], optional, default 1
-        Scaling factor of the output image, if tuple is given it will be (width_scale, height_scale).
-    sharpness : float, optional, default 1
-        Increases the sharpness of the image by the given factor
-    brightness : float, optional, default 1
-        Increases the brightness of the image by the given factor
-    sort_chars : bool, optional, default False
-        If given an unordered charset, it will sort it by the brightness of the characters.
-    colorfull : bool, optional, default False
-        Whether to use colored characters (only works on terminal).
+    Args:
+        image: The image to convert to ASCII art, can be given as path or URL or an Image object.
+            If given the string "clip" or "clipboard", it will use the image from the clipboard.
+        size: The final size of the ascii art, if scale is given the scale will be applied upon this size.
+        charset: Characters to use for conversion ordered in lightest to darkest, if not given will use default characters.
+        fix_scaling: Whether to fix scaling of the image to preserve aspect ratio.
+        scale: Scaling factor of the output image, if tuple is given it will be (width_scale, height_scale).
+        sharpness: Increases the sharpness of the image by the given factor
+        brightness: Increases the brightness of the image by the given factor
+        sort_chars: If given an unordered charset, it will sort it by the brightness of the characters.
+        colorfull: Whether to use colored characters (only works on terminal).
 
-    Returns
-    -------
-    output: str
-        The ASCII art representation of the input image.
+    Returns:
+        output: The ASCII art representation of the input image.
 
-    Raises
-    ------
-    ValueError
-        If image is invalid or cannot be loaded from path or URL.
+    Raises:
+        ValueError: If image is invalid or cannot be loaded from path or URL.
     """
     if isinstance(image, str):
         if image.lower() in ("clip", "clipboard"):
