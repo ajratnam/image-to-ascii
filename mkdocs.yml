@@ -1,0 +1,49 @@
+site_name: Image to Ascii Docs
+site_description: Convert images to ascii art
+site_author: Ajay Ratnam
+site_url: https://ajayratnam.me/image-to-ascii/
+repo_url: https://www.github.com/ajratnam/image-to-ascii
+repo_name: Image to Ascii
+edit_uri: edit/main/docs/
+
+theme:
+  name: "material"
+
+  icon:
+    view: material/eye
+
+  palette:
+    - scheme: slate
+      accent: deep_purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+    - scheme: default
+      accent: deep_purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - toc.follow
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+    - content.actions.view
+
+plugins:
+  - search
+  - mkdocstrings
+
+nav:
+  - Converter: index.md
