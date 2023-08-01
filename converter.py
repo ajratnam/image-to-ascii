@@ -39,7 +39,7 @@ def ascii_to_image(text: str, font: ImageFont.FreeTypeFont = base_font) -> Image
     Returns:
         text_image: The image of the rendered text.
     """
-    text_image = Image.new("RGB", sizeof(text))
+    text_image = Image.new("RGB", sizeof(text, font))
     draw = ImageDraw.Draw(text_image)
     draw.text((0, 0), text, (255, 255, 255), font)
     return text_image

@@ -2,9 +2,8 @@ site_name: Image to Ascii Docs
 site_description: Convert images to ascii art
 site_author: Ajay Ratnam
 site_url: https://ajayratnam.me/image-to-ascii/
-repo_url: https://www.github.com/ajratnam/image-to-ascii
+repo_url: https://www.github.com/ajratnam/image-to-ascii/
 repo_name: Image to Ascii
-edit_uri: edit/main/docs/
 
 theme:
   name: "material"
@@ -39,7 +38,6 @@ theme:
     - content.tabs.link
     - content.code.annotation
     - content.code.copy
-    - content.actions.view
 
 plugins:
   - search
