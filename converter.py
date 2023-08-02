@@ -95,7 +95,7 @@ def get_brightness_of_char(char: str, font: ImageFont.FreeTypeFont = base_font) 
         True
     """
     image = ascii_to_image(char, font)
-    return (np.array(image) != 0).sum()
+    return (np.array(image) != 0).sum().item()
 
 
 sorted_letters = sorted(CONVERSION_CHARACTERS, key=get_brightness_of_char)
