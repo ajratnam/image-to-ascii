@@ -18,6 +18,8 @@ sty = "^1.0.4"
 mkdocs-material = "^9.1.21"
 mkdocstrings-python = "^1.2.1"
 pytest = "^7.4.0"
+coverage = "^7.2.7"
+pytesseract = "^0.3.10"
 
 [build-system]
 requires = ["poetry-core"]

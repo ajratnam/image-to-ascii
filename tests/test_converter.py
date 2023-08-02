@@ -1,5 +1,6 @@
 import pytest
 from PIL import ImageFont, Image
+from pytesseract import image_to_string
 
 from converter import sizeof, ascii_to_image
 
@@ -22,6 +23,15 @@ def custom_font():
 @pytest.fixture
 def custom_font_large():
     return ImageFont.truetype("arial.ttf", 30)
+
+
+def test_fixtures_are_valid(test_word, test_word_long, custom_font, custom_font_large):
+    assert isinstance(test_word, str)
+    assert isinstance(test_word_long, str)
+    assert isinstance(custom_font, ImageFont.FreeTypeFont)
+    assert isinstance(custom_font_large, ImageFont.FreeTypeFont)
+    assert len(test_word) < len(test_word_long)
+    assert custom_font.size < custom_font_large.size
 
 
 def test_sizeof_returns_size(test_word):
@@ -68,6 +78,12 @@ def test_ascii_to_image_actually_loads_font(test_word, custom_font_large):
     image = ascii_to_image(test_word, custom_font_large)
     crop_box = image.getbbox()
     assert image.size[1] == crop_box[3]
+
+
+def test_ascii_to_image_writes_correct_text(test_word):
+    image = ascii_to_image(test_word)
+    detected_word = image_to_string(image).strip()
+    assert detected_word == test_word
 
 
 def test_ascii_to_image_size_increases_with_text_length(test_word, test_word_long):
