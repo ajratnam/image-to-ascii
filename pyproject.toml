@@ -17,6 +17,7 @@ sty = "^1.0.4"
 [tool.poetry.group.dev.dependencies]
 mkdocs-material = "^9.1.21"
 mkdocstrings-python = "^1.2.1"
+pytest = "^7.4.0"
 
 [build-system]
 requires = ["poetry-core"]
