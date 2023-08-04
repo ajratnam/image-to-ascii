@@ -7,7 +7,7 @@ import win32clipboard
 from PIL import ImageFont, Image
 from pytesseract import image_to_string
 
-from converter import sizeof, ascii_to_image, get_brightness_of_char, image_to_ascii
+from converter import sizeof, ascii_to_image, get_brightness_of_char, image_to_ascii, sorted_letters
 
 url_regex = r"((http|https)://)(www.)?[a-zA-Z0-9@:%._\+~#?&//=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%._\+~#?&//=]*)"
 url_regex = re.compile(url_regex, re.IGNORECASE)
@@ -73,6 +73,31 @@ def custom_scale_large():
     return 2.0
 
 
+@pytest.fixture
+def base_sorted_charset():
+    return "".join(sorted_letters)
+
+
+@pytest.fixture
+def custom_sorted_charset(base_sorted_charset):
+    return " " + base_sorted_charset[1:]
+
+
+@pytest.fixture
+def brightness_factor():
+    return 2
+
+
+@pytest.fixture
+def darkness_factor():
+    return 0.5
+
+
+@pytest.fixture
+def sharpness_factor():
+    return 2
+
+
 def copy_to_clipboard(image):
     with io.BytesIO() as output:
         image.convert("RGB").save(output, "BMP")
@@ -89,7 +114,12 @@ def get_size_of(image_text):
     return image_width, image_height
 
 
-def test_fixtures_are_valid(test_word, test_word_long, custom_font, custom_font_large, low_brightness_char, high_brightness_char, local_image, image_url):
+def get_indexer_array(ascii_image, charset):
+    mapper = map(charset.index, ascii_image.replace("\n", ""))
+    return np.array(list(mapper))
+
+
+def test_fixtures_are_valid(test_word, test_word_long, custom_font, custom_font_large, low_brightness_char, high_brightness_char, local_image, image_url, base_sorted_charset, custom_sorted_charset, brightness_factor, darkness_factor, sharpness_factor):
     assert isinstance(test_word, str)
     assert isinstance(test_word_long, str)
     assert isinstance(custom_font, ImageFont.FreeTypeFont)
@@ -98,11 +128,20 @@ def test_fixtures_are_valid(test_word, test_word_long, custom_font, custom_font_
     assert isinstance(high_brightness_char, str)
     assert isinstance(local_image, Image.Image)
     assert isinstance(image_url, str)
+    assert isinstance(base_sorted_charset, str)
+    assert isinstance(custom_sorted_charset, str)
+    assert isinstance(brightness_factor, int | float)
+    assert isinstance(darkness_factor, int | float)
+    assert isinstance(sharpness_factor, int | float)
     assert len(test_word) < len(test_word_long)
     assert custom_font.size < custom_font_large.size
     assert len(low_brightness_char) == 1
     assert len(high_brightness_char) == 1
     assert url_regex.match(image_url)
+    assert base_sorted_charset[1:] == custom_sorted_charset[1:]
+    assert custom_sorted_charset[0] == " "
+    assert brightness_factor > 1
+    assert darkness_factor < 1
 
 
 def test_sizeof_returns_size(test_word):
@@ -213,6 +252,11 @@ def test_image_to_ascii_loads_from_clipboard(local_image):
     assert ascii_string == image_to_ascii(local_image)
 
 
+def test_image_to_ascii_uses_correct_charset(local_image, base_sorted_charset):
+    ascii_string = image_to_ascii(local_image, charset=base_sorted_charset)
+    assert all(char in ascii_string for char in base_sorted_charset)
+
+
 def test_image_to_ascii_creates_correct_size(local_image):
     ascii_string = image_to_ascii(local_image)
     ascii_string_array = np.array(list(ascii_string))
@@ -263,3 +307,49 @@ def test_image_to_ascii_conjunction_of_scale_and_custom_size(local_image, custom
     width, height = get_size_of(ascii_string)
     assert width == int(custom_size[0] * custom_scale)
     assert height == int(custom_size[1] * custom_scale)
+
+
+def test_image_to_ascii_actually_uses_custom_charset(local_image, base_sorted_charset, custom_sorted_charset):
+    base_ascii_string = image_to_ascii(local_image, charset=base_sorted_charset)
+    custom_ascii_string = image_to_ascii(local_image, charset=custom_sorted_charset)
+    assert all(char in custom_ascii_string for char in custom_sorted_charset)
+    assert custom_ascii_string == base_ascii_string.replace(base_sorted_charset[0], " ")
+
+
+def test_image_to_ascii_increase_brightness(local_image, brightness_factor, base_sorted_charset):
+    base_ascii_string = image_to_ascii(local_image, charset=base_sorted_charset)
+    bright_ascii_string = image_to_ascii(local_image, charset=base_sorted_charset, brightness=brightness_factor)
+    base_ascii_array = get_indexer_array(base_ascii_string, base_sorted_charset)
+    bright_ascii_array = get_indexer_array(bright_ascii_string, base_sorted_charset)
+    assert np.all(bright_ascii_array >= base_ascii_array)
+    if np.any(base_ascii_array != len(base_sorted_charset) - 1):
+        assert np.any(bright_ascii_array > base_ascii_array)
+
+
+def test_image_to_ascii_decrease_brightness(local_image, darkness_factor, base_sorted_charset):
+    base_ascii_string = image_to_ascii(local_image, charset=base_sorted_charset)
+    dark_ascii_string = image_to_ascii(local_image, charset=base_sorted_charset, brightness=darkness_factor)
+    base_ascii_array = get_indexer_array(base_ascii_string, base_sorted_charset)
+    dark_ascii_array = get_indexer_array(dark_ascii_string, base_sorted_charset)
+    assert np.all(dark_ascii_array <= base_ascii_array)
+    if np.any(base_ascii_array != 0):
+        assert np.any(dark_ascii_array < base_ascii_array)
+
+
+def test_image_to_ascii_maybe_sharpens(local_image, sharpness_factor):
+    base_ascii_string = image_to_ascii(local_image)
+    sharp_ascii_string = image_to_ascii(local_image, sharpness=sharpness_factor)
+    assert len(base_ascii_string) == len(sharp_ascii_string)
+    assert sharp_ascii_string != base_ascii_string
+
+
+def test_image_to_ascii_sorts_charset(local_image, base_sorted_charset):
+    base_ascii_string = image_to_ascii(local_image, charset=base_sorted_charset)
+    double_reversed_ascii_string = image_to_ascii(local_image, charset=base_sorted_charset[::-1], sort_chars=True)
+    assert base_ascii_string == double_reversed_ascii_string
+
+
+def test_image_to_ascii_colorful(local_image):
+    base_ascii_string = image_to_ascii(local_image)
+    colorful_ascii_string = image_to_ascii(local_image, colorful=True)
+    assert colorful_ascii_string != base_ascii_string
