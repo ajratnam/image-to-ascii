@@ -98,13 +98,17 @@ def sharpness_factor():
     return 2
 
 
-def copy_to_clipboard(image):
+def copy_any_to_clipboard(clipboard_data, clipboard_type):
+    win32clipboard.OpenClipboard()
+    win32clipboard.EmptyClipboard()
+    win32clipboard.SetClipboardData(clipboard_type, clipboard_data)
+    win32clipboard.CloseClipboard()
+
+
+def copy_image_to_clipboard(image):
     with io.BytesIO() as output:
         image.convert("RGB").save(output, "BMP")
-        win32clipboard.OpenClipboard()
-        win32clipboard.EmptyClipboard()
-        win32clipboard.SetClipboardData(win32clipboard.CF_DIB, output.getvalue()[14:])
-        win32clipboard.CloseClipboard()
+        copy_any_to_clipboard(output.getvalue()[14:], win32clipboard.CF_DIB)
 
 
 def get_size_of(image_text):
@@ -246,7 +250,7 @@ def test_image_to_ascii_loads_from_url(image_url, local_image):
 
 
 def test_image_to_ascii_loads_from_clipboard(local_image):
-    copy_to_clipboard(local_image)
+    copy_image_to_clipboard(local_image)
     ascii_string = image_to_ascii("clip")
     assert isinstance(ascii_string, str)
     assert ascii_string == image_to_ascii(local_image)
@@ -353,3 +357,24 @@ def test_image_to_ascii_colorful(local_image):
     base_ascii_string = image_to_ascii(local_image)
     colorful_ascii_string = image_to_ascii(local_image, colorful=True)
     assert colorful_ascii_string != base_ascii_string
+
+
+def test_image_to_ascii_no_image_in_clipboard():
+    with pytest.raises(ValueError, match="Unable to load image from clipboard"):
+        copy_any_to_clipboard("Wrong Data", win32clipboard.CF_UNICODETEXT)
+        image_to_ascii("clipboard")
+
+
+def test_image_to_ascii_invalid_url():
+    with pytest.raises(ValueError, match="Unable to load image from URL"):
+        image_to_ascii("https://www.not.a.website.com")
+
+
+def test_image_to_ascii_invalid_path():
+    with pytest.raises(ValueError, match="Unable to load image from path"):
+        image_to_ascii("../not/a/valid/path.png")
+
+
+def test_image_to_ascii_invalid_image():
+    with pytest.raises(ValueError, match="Invalid image path or URL"):
+        image_to_ascii(0)

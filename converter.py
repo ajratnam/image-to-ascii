@@ -194,13 +194,13 @@ def image_to_ascii(
         else:
             try:
                 image = Image.open(image)
-            except OSError:
+            except FileNotFoundError:
+                raise ValueError("Unable to load image from path")
+            except Exception:
                 try:
                     image = Image.open(get(image, stream=True).raw)
                 except Exception:
                     raise ValueError("Unable to load image from URL")
-            except Exception:
-                raise ValueError("Unable to load image from path")
     if not isinstance(image, Image.Image):
         raise ValueError("Invalid image path or URL")
 
