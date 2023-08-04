@@ -98,19 +98,25 @@ def get_brightness_of_char(char: str, font: ImageFont.FreeTypeFont = base_font) 
     return (np.array(image) != 0).sum().item()
 
 
-sorted_letters = sorted(CONVERSION_CHARACTERS, key=get_brightness_of_char)
+sorted_letters = sorted(
+    CONVERSION_CHARACTERS,
+    key=lambda char: (
+        get_brightness_of_char(char),
+        char
+    )
+)
 
 
 def image_to_ascii(
-    image: Image.Image | str,
-    size: Optional[tuple[int, int]] = None,
-    charset: Optional[Sequence[str]] = None,
-    fix_scaling: bool = True,
-    scale: float | tuple[float, float] = 1,
-    sharpness: float = 1,
-    brightness: float = 1,
-    sort_chars: bool = False,
-    colorfull: bool = False,
+        image: Image.Image | str,
+        size: Optional[tuple[int, int]] = None,
+        charset: Optional[Sequence[str]] = None,
+        fix_scaling: bool = True,
+        scale: float | tuple[float, float] = 1,
+        sharpness: float = 1,
+        brightness: float = 1,
+        sort_chars: bool = False,
+        colorfull: bool = False,
 ) -> str:
     """
     Convert image to ASCII art.
@@ -201,7 +207,13 @@ def image_to_ascii(
     image = image.convert("RGB")
 
     if sort_chars and charset:
-        charset = sorted(charset, key=get_brightness_of_char)
+        charset = sorted(
+            charset,
+            key=lambda char: (
+                get_brightness_of_char(char),
+                char
+            )
+        )
     charset = charset or sorted_letters
 
     image_width, image_height = size or image.size
