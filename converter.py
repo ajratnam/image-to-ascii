@@ -116,7 +116,7 @@ def image_to_ascii(
         sharpness: float = 1,
         brightness: float = 1,
         sort_chars: bool = False,
-        colorfull: bool = False,
+        colorful: bool = False,
 ) -> str:
     """
     Convert image to ASCII art.
@@ -131,7 +131,7 @@ def image_to_ascii(
         sharpness: Increases the sharpness of the image by the given factor
         brightness: Increases the brightness of the image by the given factor
         sort_chars: If given an unordered charset, it will sort it by the brightness of the characters.
-        colorfull: Whether to use colored characters (only works on terminal).
+        colorful: Whether to use colored characters (only works on terminal).
 
     Returns:
         output: The ASCII art representation of the input image.
@@ -230,7 +230,7 @@ def image_to_ascii(
     ascii_converted = np.vectorize(charset.__getitem__)(image_array)
 
     output = "\n".join(map("".join, ascii_converted))
-    if colorfull:
+    if colorful:
         colors = []
         for row in np.array(sharpened_image.convert("RGB")):
             for pixel in row:
