@@ -108,15 +108,15 @@ sorted_letters = sorted(
 
 
 def image_to_ascii(
-        image: Image.Image | str,
-        size: Optional[tuple[int, int]] = None,
-        charset: Optional[Sequence[str]] = None,
-        fix_scaling: bool = True,
-        scale: float | tuple[float, float] = 1,
-        sharpness: float = 1,
-        brightness: float = 1,
-        sort_chars: bool = False,
-        colorful: bool = False,
+    image: Image.Image | str,
+    size: Optional[tuple[int, int]] = None,
+    charset: Optional[Sequence[str]] = None,
+    fix_scaling: bool = True,
+    scale: float | tuple[float, float] = 1,
+    sharpness: float = 1,
+    brightness: float = 1,
+    sort_chars: bool = False,
+    colorful: bool = False,
 ) -> str:
     """
     Convert image to ASCII art.
