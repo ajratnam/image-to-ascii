@@ -1,16 +1,6 @@
 # image-to-ascii
 A python program to convert an image into an ascii image
 
-## Table of Contents
-
-- [Introduction](#introduction)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Examples](#examples)
-- [Parameters](#parameters)
-- [License](#license)
-- [Contributing](#contributing)
-
 ## Introduction
 
 This program allows you to convert images into ASCII art. It uses various parameters to control the conversion process, including image scaling, sharpness adjustment, brightness adjustment, character set, and more.
@@ -45,7 +35,7 @@ from converter import image_to_ascii
 print(image_to_ascii('images/angry_bird.jpg'))
 ```
 This converts the image to ASCII art and prints it to the console.
-![ascii_angry_bird](images/angry_bird_ascii.jpg)
+![ascii_angry_bird](https://raw.githubusercontent.com/ajratnam/image-to-ascii/main/images/angry_bird_ascii.jpg)
 
 
 ### Save the ASCII art to an image.
@@ -64,7 +54,7 @@ from converter import image_to_ascii
 print(image_to_ascii("images/angry_bird.jpg", size=(30, 30)))
 ```
 This resizes the ASCII art to look like 30x30 characters(but it is actually 60x30 pixels).
-![ascii_angry_bird_resized](images/angry_bird_ascii_resized.jpg)
+![ascii_angry_bird_resized](https://raw.githubusercontent.com/ajratnam/image-to-ascii/main/images/angry_bird_ascii_resized.jpg)
 
 
 ### Change the size of the ascii art by absolute pixels but do not try to maintain visual aspect ratio.
@@ -73,7 +63,8 @@ from converter import image_to_ascii
 print(image_to_ascii("images/angry_bird.jpg", size=(30, 30), fix_scaling=False))
 ```
 This resizes the ASCII art to 30x30 characters.
-![ascii_angry_bird_resized](images/angry_bird_ascii_resized_actual_size.jpg)
+
+![ascii_angry_bird_resized](https://raw.githubusercontent.com/ajratnam/image-to-ascii/main/images/angry_bird_ascii_resized_actual_size.jpg)
 
 
 ### Change the size of the ascii art by relative scaling.
@@ -82,7 +73,7 @@ from converter import image_to_ascii
 print(image_to_ascii("images/angry_bird.jpg", scale=0.5))
 ```
 This resizes the ASCII art to 50% of the original size.
-![ascii_angry_bird_resized](images/angry_bird_ascii_scaled.jpg)
+![ascii_angry_bird_resized](https://raw.githubusercontent.com/ajratnam/image-to-ascii/main/images/angry_bird_ascii_scaled.jpg)
 
 
 ### Brighten the ascii art.
@@ -91,7 +82,7 @@ from converter import image_to_ascii
 print(image_to_ascii("images/angry_bird.jpg", brightness=3))
 ```
 This increases the brightness of the ASCII art to 3 times the original.
-![ascii_angry_bird_resized](images/angry_bird_ascii_brightened.jpg)
+![ascii_angry_bird_resized](https://raw.githubusercontent.com/ajratnam/image-to-ascii/main/images/angry_bird_ascii_brightened.jpg)
 
 
 ### Darken the ascii art.
@@ -100,7 +91,7 @@ from converter import image_to_ascii
 print(image_to_ascii("images/angry_bird.jpg", brightness=0.2))
 ```
 This decreases the brightness of the ASCII art to 20% of the original.
-![ascii_angry_bird_resized](images/angry_bird_ascii_darkened.jpg)
+![ascii_angry_bird_resized](https://raw.githubusercontent.com/ajratnam/image-to-ascii/main/images/angry_bird_ascii_darkened.jpg)
 
 
 ### Sharpen the ascii art.
@@ -109,7 +100,7 @@ from converter import image_to_ascii
 print(image_to_ascii("images/angry_bird.jpg", sharpness=3))
 ```
 This increases the sharpness of the ASCII art to 3 times the original.
-![ascii_angry_bird_resized](images/angry_bird_ascii_sharpened.jpg)
+![ascii_angry_bird_resized](https://raw.githubusercontent.com/ajratnam/image-to-ascii/main/images/angry_bird_ascii_sharpened.jpg)
 
 
 ### Blur the ascii art.
@@ -118,7 +109,7 @@ from converter import image_to_ascii
 print(image_to_ascii("images/angry_bird.jpg", sharpness=0.2))
 ```
 This decreases the sharpness of the ASCII art to 20% of the original.
-![ascii_angry_bird_resized](images/angry_bird_ascii_blurred.jpg)
+![ascii_angry_bird_resized](https://raw.githubusercontent.com/ajratnam/image-to-ascii/main/images/angry_bird_ascii_blurred.jpg)
 
 
 ### Change the character set used to generate the ascii art.
@@ -127,7 +118,7 @@ from converter import image_to_ascii
 print(image_to_ascii("images/angry_bird.jpg", charset=' ░▒▓█'))
 ```
 Changes the characters used to generate the ASCII art.
-![ascii_angry_bird_resized](images/angry_bird_ascii_custom_charset.jpg)
+![ascii_angry_bird_resized](https://raw.githubusercontent.com/ajratnam/image-to-ascii/main/images/angry_bird_ascii_custom_charset.jpg)
 
 
 ### Print colored ascii art to the console.
@@ -136,12 +127,12 @@ from converter import image_to_ascii
 print(image_to_ascii("images/angry_bird.jpg", colorful=True))
 ```
 Prints the ASCII art colorfully to the console.
-![ascii_angry_bird_resized](images/angry_bird_ascii_colored.jpg)
+![ascii_angry_bird_resized](https://raw.githubusercontent.com/ajratnam/image-to-ascii/main/images/angry_bird_ascii_colored.jpg)
 
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](https://raw.githubusercontent.com/ajratnam/image-to-ascii/main/LICENSE).
 
 ## Contributing
 
