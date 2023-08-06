@@ -21,6 +21,7 @@ pytest = "^7.4.0"
 coverage = "^7.2.7"
 pytesseract = "^0.3.10"
 pywin32 = "^306"
+pytest-cov = "^4.1.0"
 
 [build-system]
 requires = ["poetry-core"]
