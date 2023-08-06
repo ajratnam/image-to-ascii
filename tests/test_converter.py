@@ -45,7 +45,10 @@ def high_brightness_char():
 
 @pytest.fixture
 def local_image():
-    return Image.open("../images/angry_bird.jpg")
+    try:
+        return Image.open("../images/angry_bird.jpg")
+    except FileNotFoundError:
+        return Image.open("images/angry_bird.jpg")
 
 
 @pytest.fixture
@@ -69,8 +72,8 @@ def custom_scale():
 
 
 @pytest.fixture
-def custom_scale_large():
-    return 2.0
+def custom_scale_uneven():
+    return 0.3, 0.7
 
 
 @pytest.fixture
@@ -123,7 +126,7 @@ def get_indexer_array(ascii_image, charset):
     return np.array(list(mapper))
 
 
-def test_fixtures_are_valid(test_word, test_word_long, custom_font, custom_font_large, low_brightness_char, high_brightness_char, local_image, image_url, base_sorted_charset, custom_sorted_charset, brightness_factor, darkness_factor, sharpness_factor):
+def test_fixtures_are_valid(test_word, test_word_long, custom_font, custom_font_large, low_brightness_char, high_brightness_char, local_image, image_url, custom_size, custom_size_large, custom_scale, custom_scale_uneven, base_sorted_charset, custom_sorted_charset, brightness_factor, darkness_factor, sharpness_factor):
     assert isinstance(test_word, str)
     assert isinstance(test_word_long, str)
     assert isinstance(custom_font, ImageFont.FreeTypeFont)
@@ -132,6 +135,10 @@ def test_fixtures_are_valid(test_word, test_word_long, custom_font, custom_font_
     assert isinstance(high_brightness_char, str)
     assert isinstance(local_image, Image.Image)
     assert isinstance(image_url, str)
+    assert isinstance(custom_size, tuple)
+    assert isinstance(custom_size_large, tuple)
+    assert isinstance(custom_scale, float)
+    assert isinstance(custom_scale_uneven, tuple)
     assert isinstance(base_sorted_charset, str)
     assert isinstance(custom_sorted_charset, str)
     assert isinstance(brightness_factor, int | float)
@@ -142,6 +149,18 @@ def test_fixtures_are_valid(test_word, test_word_long, custom_font, custom_font_
     assert len(low_brightness_char) == 1
     assert len(high_brightness_char) == 1
     assert url_regex.match(image_url)
+    assert len(custom_size) == 2
+    assert all(isinstance(x, int) for x in custom_size)
+    assert all(x > 0 for x in custom_size)
+    assert len(custom_size_large) == 2
+    assert all(isinstance(x, int) for x in custom_size_large)
+    assert all(x > 0 for x in custom_size_large)
+    assert custom_scale > 0
+    assert custom_scale < 1
+    assert len(custom_scale_uneven) == 2
+    assert all(isinstance(x, int | float) for x in custom_scale_uneven)
+    assert all(x > 0 for x in custom_scale_uneven)
+    assert custom_scale_uneven[0] != custom_scale_uneven[1]
     assert base_sorted_charset[1:] == custom_sorted_charset[1:]
     assert custom_sorted_charset[0] == " "
     assert brightness_factor > 1
@@ -297,13 +316,13 @@ def test_image_to_ascii_scales(local_image, custom_scale):
     assert scaled_height == int(original_height * custom_scale)
 
 
-def test_image_to_ascii_increases_with_scaling_factor(local_image, custom_scale, custom_scale_large):
-    small_ascii_string = image_to_ascii(local_image, scale=custom_scale, fix_scaling=False)
-    large_ascii_string = image_to_ascii(local_image, scale=custom_scale_large, fix_scaling=False)
-    original_width, original_height = get_size_of(small_ascii_string)
-    scaled_width, scaled_height = get_size_of(large_ascii_string)
-    assert scaled_width == int(original_width * custom_scale_large / custom_scale)
-    assert scaled_height == int(original_height * custom_scale_large / custom_scale)
+def test_image_to_ascii_scales_uneven(local_image, custom_scale_uneven):
+    base_ascii_string = image_to_ascii(local_image, fix_scaling=False)
+    uneven_ascii_string = image_to_ascii(local_image, scale=custom_scale_uneven, fix_scaling=False)
+    original_width, original_height = get_size_of(base_ascii_string)
+    scaled_width, scaled_height = get_size_of(uneven_ascii_string)
+    assert scaled_width == int(original_width * custom_scale_uneven[0])
+    assert scaled_height == int(original_height * custom_scale_uneven[1])
 
 
 def test_image_to_ascii_conjunction_of_scale_and_custom_size(local_image, custom_scale, custom_size):
