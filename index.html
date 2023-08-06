@@ -16,8 +16,10 @@
       
       
       
+        <link rel="next" href="examples/">
+      
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.1, mkdocs-material-9.1.21">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.21">
     
     
       
@@ -322,6 +324,21 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="examples/" class="md-nav__link">
+        Examples
+      </a>
     </li>
   
 
@@ -682,7 +699,7 @@
 <span class="sd">        True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">image</span> <span class="o">=</span> <span class="n">ascii_to_image</span><span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="n">font</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -695,7 +712,7 @@
 
 
 <h2 id="converter.image_to_ascii" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">image_to_ascii</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fix_scaling</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sharpness</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">brightness</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sort_chars</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">colorfull</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">image_to_ascii</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fix_scaling</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sharpness</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">brightness</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sort_chars</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">colorful</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h2>
 
@@ -831,7 +848,7 @@ If given the string "clip" or "clipboard", it will use the image from the clipbo
           </td>
         </tr>
         <tr>
-          <td><code>colorfull</code></td>
+          <td><code>colorful</code></td>
           <td>
                 <code>bool</code>
           </td>
@@ -947,13 +964,7 @@ If given the string "clip" or "clipboard", it will use the image from the clipbo
 
           <details class="quote">
             <summary>Source code in <code>converter.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">110</span>
 <span class="normal">111</span>
 <span class="normal">112</span>
 <span class="normal">113</span>
@@ -1071,7 +1082,19 @@ If given the string "clip" or "clipboard", it will use the image from the clipbo
 <span class="normal">225</span>
 <span class="normal">226</span>
 <span class="normal">227</span>
-<span class="normal">228</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">image_to_ascii</span><span class="p">(</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">image_to_ascii</span><span class="p">(</span>
     <span class="n">image</span><span class="p">:</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">charset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1080,7 +1103,7 @@ If given the string "clip" or "clipboard", it will use the image from the clipbo
     <span class="n">sharpness</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="n">brightness</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="n">sort_chars</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">colorfull</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">colorful</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert image to ASCII art.</span>
@@ -1095,7 +1118,7 @@ If given the string "clip" or "clipboard", it will use the image from the clipbo
 <span class="sd">        sharpness: Increases the sharpness of the image by the given factor</span>
 <span class="sd">        brightness: Increases the brightness of the image by the given factor</span>
 <span class="sd">        sort_chars: If given an unordered charset, it will sort it by the brightness of the characters.</span>
-<span class="sd">        colorfull: Whether to use colored characters (only works on terminal).</span>
+<span class="sd">        colorful: Whether to use colored characters (only works on terminal).</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        output: The ASCII art representation of the input image.</span>
@@ -1158,20 +1181,26 @@ If given the string "clip" or "clipboard", it will use the image from the clipbo
         <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unable to load image from path&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">get</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">raw</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unable to load image from URL&quot;</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unable to load image from path&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid image path or URL&quot;</span><span class="p">)</span>
 
     <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">sort_chars</span> <span class="ow">and</span> <span class="n">charset</span><span class="p">:</span>
-        <span class="n">charset</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">charset</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">get_brightness_of_char</span><span class="p">)</span>
+        <span class="n">charset</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="n">charset</span><span class="p">,</span>
+            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">char</span><span class="p">:</span> <span class="p">(</span>
+                <span class="n">get_brightness_of_char</span><span class="p">(</span><span class="n">char</span><span class="p">),</span>
+                <span class="n">char</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
     <span class="n">charset</span> <span class="o">=</span> <span class="n">charset</span> <span class="ow">or</span> <span class="n">sorted_letters</span>
 
     <span class="n">image_width</span><span class="p">,</span> <span class="n">image_height</span> <span class="o">=</span> <span class="n">size</span> <span class="ow">or</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span>
@@ -1188,7 +1217,7 @@ If given the string "clip" or "clipboard", it will use the image from the clipbo
     <span class="n">ascii_converted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">charset</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">)(</span><span class="n">image_array</span><span class="p">)</span>
 
     <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">,</span> <span class="n">ascii_converted</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">colorfull</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">colorful</span><span class="p">:</span>
         <span class="n">colors</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sharpened_image</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">)):</span>
             <span class="k">for</span> <span class="n">pixel</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
