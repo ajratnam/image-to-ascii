@@ -9,7 +9,18 @@ from requests import get
 
 from config import CONVERSION_CHARACTERS
 
-base_font = ImageFont.truetype("monos.ttf", 20)
+
+def load_font(
+    font_path: str, font_size: int
+) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
+    try:
+        return ImageFont.truetype(font_path, font_size)
+    except OSError:
+        # print(f"Load {font_path} font failed. Using default font.")
+        return ImageFont.load_default()
+
+
+base_font = load_font("monos.ttf", 20)
 
 
 def sizeof(text: str, font: ImageFont.FreeTypeFont = base_font) -> tuple[int, int]:
